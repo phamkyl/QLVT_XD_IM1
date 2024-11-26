@@ -17,10 +17,11 @@ public class SupplierManagementView extends JPanel {
     private SupplierDAO supplierDAO;
     private JTextField txtMaNhaCungCap, txtTenNhaCungCap, txtDiaChi, txtSoDienThoai, txtEmail;
     private JTable supplierTable;
+    private int maChiNhanh;
 
-    public SupplierManagementView(MainView_IM mainViewIm) {
+    public SupplierManagementView(MainView_IM mainViewIm,int maChiNhanh) {
         supplierDAO = new SupplierDAO();
-
+        this.maChiNhanh = maChiNhanh;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Title label
@@ -85,6 +86,14 @@ public class SupplierManagementView extends JPanel {
             button.setForeground(Color.WHITE);
             button.setFont(new Font("Arial", Font.BOLD, 14));
             button.setFocusPainted(false);
+        }
+
+        if (maChiNhanh == 0) {
+            addButton.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            //refreshButton.setVisible(false);
+            exitButton.setVisible(false);
         }
 
         buttonPanel.add(addButton);

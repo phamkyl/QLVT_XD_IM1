@@ -69,6 +69,30 @@ public class BranchDAO {
         return branches; // Trả về danh sách chi nhánh
     }
 
+    public List<Branch> getAllBranchesTong() throws SQLException {
+        List<Branch> branches = new ArrayList<>();
+        String query = "SELECT * FROM ChiNhanh ";
+
+        // Giả sử chúng ta chỉ cần kết nối với một trong các server chính để lấy danh sách tất cả chi nhánh
+       // String serverURL = getServerURLByBranch(maChiNhanh); // Get server URL based on branch
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            //stmt.setInt(1, maChiNhanh); // Set branch ID in the query
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                branches.add(new Branch(
+                        rs.getInt("MaChiNhanh"),
+                        rs.getString("TenChiNhanh"),
+                        rs.getString("DiaChi")
+                ));
+            }
+        }
+        return branches; // Trả về danh sách chi nhánh
+    }
+
     // Thêm chi nhánh mới
     public void addBranch(Branch branch) throws SQLException {
         String query = "INSERT INTO ChiNhanh (MaChiNhanh, TenChiNhanh, DiaChi) VALUES (?, ?, ?)";
@@ -116,6 +140,8 @@ public class BranchDAO {
     // Lấy URL của server dựa trên mã chi nhánh
     private String getServerURLByBranch(int maChiNhanh) {
         switch (maChiNhanh) {
+            case 0:
+                return DistributedDatabaseConnection.SERVER1_URL;
             case 1:
                 return DistributedDatabaseConnection.SERVER2_URL; // URL server chứa chi nhánh 1
             case 2:

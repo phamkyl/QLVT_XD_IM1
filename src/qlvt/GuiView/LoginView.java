@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 public class LoginView extends JFrame {
     private JTextField txtMaNhanVien;
     private JPasswordField txtMatKhau;
-    private JTextField txtMaChiNhanh; // New field for branch ID
+    private JTextField txtMaChiNhanh,txtVaitro; // New field for branch ID
     private LoginController controller;
 
     public LoginView(LoginController controller) {
@@ -89,9 +89,20 @@ public class LoginView extends JFrame {
         gbc.gridx = 2;
         panel.add(txtMaChiNhanh, gbc);
 
-        // Nhập mật khẩu
+        // Nhập mã chi nhánh
         gbc.gridx = 0;
         gbc.gridy = 2;
+        panel.add(new JLabel("Vai tro:"), gbc);
+
+        txtVaitro = new JTextField(20);
+        gbc.gridx = 2;
+        panel.add(txtVaitro, gbc);
+
+
+
+        // Nhập mật khẩu
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         panel.add(new JLabel("Mật khẩu:"), gbc);
 
         txtMatKhau = new JPasswordField(20);
@@ -147,8 +158,9 @@ public class LoginView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String maNhanVien = txtMaNhanVien.getText();
                 String matKhau = new String(txtMatKhau.getPassword());
+                String Chucvu =  txtVaitro.getText();
                 String maChiNhanh = txtMaChiNhanh.getText(); // Get branch ID from the new field
-                controller.login(maNhanVien, matKhau, maChiNhanh); // Pass branch ID to the controller
+                controller.login(maNhanVien, matKhau, maChiNhanh,Chucvu); // Pass branch ID to the controller
             }
         });
 

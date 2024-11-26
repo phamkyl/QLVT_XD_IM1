@@ -26,11 +26,14 @@ public class OrderManagementView extends JPanel {
     private JTextField txtMaChiTiet, txtMaVatTu, txtSoLuong, txtGia;
     private JButton btnAddDetail, btnUpdateDetail, btnDeleteDetail;
     private JButton btnGenerateInvoice;
+    private int maChiNhanh;
 
-    public OrderManagementView(MainView_IM mainViewIm) {
+    public OrderManagementView(MainView_IM mainViewIm, int maChiNhanh) {
         orderDAO = new OrderDAO();
+        this.maChiNhanh = maChiNhanh;
         initUI();
         loadOrders();
+        restrictButtonsByBranch();
         setupTableSelectionListener();
         setPreferredSize(new Dimension(800, 600));
     }
@@ -138,6 +141,21 @@ public class OrderManagementView extends JPanel {
         buttonPanel.add(btnGenerateInvoice);
         btnGenerateInvoice.addActionListener(e -> generateInvoice());
     }
+
+    private void restrictButtonsByBranch() {
+        if (maChiNhanh == 0) {
+            btnAdd.setVisible(false);
+            btnUpdate.setVisible(false);
+            btnDelete.setVisible(false);
+            btnClose.setVisible(false);
+            btnGenerateInvoice.setVisible(false);
+            btnAddDetail.setVisible(false);
+            btnUpdateDetail.setVisible(false);
+            btnDeleteDetail.setVisible(false);
+        }
+    }
+
+
 
     private void loadOrders() {
         orderTableModel.setRowCount(0);

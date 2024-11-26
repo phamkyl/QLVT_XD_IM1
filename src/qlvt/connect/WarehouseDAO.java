@@ -178,11 +178,41 @@ public class WarehouseDAO {
         return warehouses; // Trả về danh sách kho
     }
 
+    public List<Warehouse> getWarehousesByBranchTong() throws SQLException {
+        List<Warehouse> warehouses = new ArrayList<>();
+        String query = "SELECT * FROM Kho ";
+
+        // Lấy URL server dựa trên mã chi nhánh
+        //String serverURL = getServerURLByBranch();
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+           // stmt.setInt(1, maChiNhanh); // Set branch ID in the query
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                warehouses.add(new Warehouse(
+                        rs.getInt("MaKho"),
+                        rs.getString("TenKho"),
+                        rs.getString("DiaChi"),
+                        rs.getInt("MaChiNhanh")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách kho: " + e.getMessage());
+            throw e;
+        }
+        return warehouses; // Trả về danh sách kho
+    }
+
 
     // Lấy URL của server dựa trên mã chi nhánh
     private String getServerURLByBranch(int maChiNhanh) {
         // Đảm bảo rằng mỗi chi nhánh có URL riêng biệt
         switch (maChiNhanh) {
+            case 0:
+                return DistributedDatabaseConnection.SERVER1_URL;
             case 1:
                 return DistributedDatabaseConnection.SERVER2_URL; // URL server chứa chi nhánh 1
             case 2:

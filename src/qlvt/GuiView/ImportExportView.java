@@ -17,10 +17,12 @@ public class ImportExportView extends JPanel {
     private JTable tablePhieuXuat;
     private PurchaseOrderDAO purchaseOrderDAO;
     private PhieuXuatDAO phieuXuatDAO;
+    private int maChiNhanh;
 
-    public ImportExportView(MainView_IM mainViewIm, PurchaseOrderDAO purchaseOrderDAO, PhieuXuatDAO phieuXuatDAO) {
+    public ImportExportView(MainView_IM mainViewIm, PurchaseOrderDAO purchaseOrderDAO, PhieuXuatDAO phieuXuatDAO,int maChiNhanh) {
         this.purchaseOrderDAO = purchaseOrderDAO;
         this.phieuXuatDAO = phieuXuatDAO;
+        this.maChiNhanh = maChiNhanh;
 
         initializeView();
     }
@@ -135,16 +137,19 @@ public class ImportExportView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBorder(BorderFactory.createLineBorder(new Color(3, 166, 120), 1));
         buttonPanel.setBackground(Color.WHITE);
-
         // Create and add buttons
         JButton importButton = createButton("Phiếu Nhập", e -> openImportView());
         JButton exportButton = createButton("Phiếu Xuất", e -> openExportView());
-
-        buttonPanel.add(importButton);
-        buttonPanel.add(exportButton);
+        if (maChiNhanh == 0) {
+            buttonPanel.setVisible(false);
+        }else {
+            buttonPanel.add(importButton);
+            buttonPanel.add(exportButton);
+        }
 
         return buttonPanel;
     }
+
 
     // Helper method to create a button
     private JButton createButton(String text, java.awt.event.ActionListener actionListener) {

@@ -107,6 +107,8 @@ public class MaterialDAO {
     // Method to get the server URL based on branch
     private String getServerURLByBranch(int maChiNhanh) {
         switch (maChiNhanh) {
+            case 0:
+                return DistributedDatabaseConnection.SERVER1_URL;
             case 1:
                 return DistributedDatabaseConnection.SERVER2_URL; // Connect to SERVER2_URL for branch 1
             case 2:

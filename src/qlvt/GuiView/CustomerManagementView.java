@@ -17,10 +17,11 @@ public class CustomerManagementView extends JPanel {
     private CustomerDAO customerDAO;
     private JTextField txtMaKhachHang, txtHoTen, txtDiaChi, txtSoDienThoai, txtEmail;
     private JTable customerTable;
+    private int maChiNhanh;
 
-    public CustomerManagementView(MainView_IM mainViewIm) throws SQLException {
+    public CustomerManagementView(MainView_IM mainViewIm,int maChiNhanh) throws SQLException {
         customerDAO = new CustomerDAO();
-
+        this.maChiNhanh = maChiNhanh;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Title label
@@ -72,42 +73,56 @@ public class CustomerManagementView extends JPanel {
         tablePanel.add(titleLabel, BorderLayout.NORTH);
         tablePanel.add(new JScrollPane(customerTable), BorderLayout.CENTER);
 
-        // Button panel
-        JPanel buttonPanel = new JPanel();
-        JButton addButton = new JButton("Thêm");
-        JButton editButton = new JButton("Sửa");
-        JButton deleteButton = new JButton("Xóa");
-        JButton refreshButton = new JButton("Làm Mới");
-        JButton exitButton = new JButton("Thoát");
+         // Button panel
+         JPanel buttonPanel = new JPanel();
+         JButton addButton = new JButton("Thêm");
+         JButton editButton = new JButton("Sửa");
+         JButton deleteButton = new JButton("Xóa");
+         JButton refreshButton = new JButton("Làm Mới");
+         JButton exitButton = new JButton("Thoát");
 
-        for (JButton button : new JButton[]{addButton, editButton, deleteButton, refreshButton, exitButton}) {
-            button.setBackground(new Color(3, 166, 120));
-            button.setForeground(Color.WHITE);
-            button.setFont(new Font("Arial", Font.BOLD, 14));
-            button.setFocusPainted(false);
+
+         for (JButton button : new JButton[]{addButton, editButton, deleteButton, refreshButton, exitButton}) {
+             button.setBackground(new Color(3, 166, 120));
+             button.setForeground(Color.WHITE);
+             button.setFont(new Font("Arial", Font.BOLD, 14));
+             button.setFocusPainted(false);
+         }
+
+        if (maChiNhanh == 0) {
+            addButton.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            refreshButton.setVisible(false);
+            exitButton.setVisible(false);
         }
 
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(refreshButton);
-        buttonPanel.add(exitButton);
+         buttonPanel.add(addButton);
+         buttonPanel.add(editButton);
+         buttonPanel.add(deleteButton);
+         buttonPanel.add(refreshButton);
+         buttonPanel.add(exitButton);
 
-        // Add panels to main layout
-        add(inputPanel);
-        add(tablePanel);
-        add(buttonPanel);
+         // Add panels to main layout
+         add(inputPanel);
+         add(tablePanel);
+         add(buttonPanel);
 
-        // Button actions
-        addButton.addActionListener(e -> addCustomer());
-        editButton.addActionListener(e -> editCustomer());
-        deleteButton.addActionListener(e -> deleteCustomer());
-        refreshButton.addActionListener(e -> clearFields());
-        exitButton.addActionListener(e -> System.exit(0));
+
+         // Button actions
+         addButton.addActionListener(e -> addCustomer());
+         editButton.addActionListener(e -> editCustomer());
+         deleteButton.addActionListener(e -> deleteCustomer());
+         refreshButton.addActionListener(e -> clearFields());
+         exitButton.addActionListener(e -> System.exit(0));
+
+
 
         // Load customers into table
         loadCustomers();
     }
+
+
 
     private void loadCustomers() {
         try {

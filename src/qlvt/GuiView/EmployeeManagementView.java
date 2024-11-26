@@ -20,7 +20,7 @@ public class EmployeeManagementView extends JPanel {
     private EmployeeDAO employeeDAO; // Data Access Object for employees
     private int maChiNhanh; // The branch ID as an integer
 
-    public EmployeeManagementView(MainView_IM mainViewIm, int maChiNhanh) {
+    public EmployeeManagementView(MainView_IM mainViewIm, int maChiNhanh) throws SQLException {
         this.maChiNhanh = maChiNhanh; // Initialize branch ID
         employeeDAO = new EmployeeDAO();
         setSize(800, 530);
@@ -28,7 +28,7 @@ public class EmployeeManagementView extends JPanel {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws SQLException {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Set layout for the main JPanel
 
         // Initialize UI components
@@ -71,12 +71,33 @@ public class EmployeeManagementView extends JPanel {
             button.setFont(new Font("Arial", Font.BOLD, 14));
             button.setFocusPainted(false);
         }
+        if (maChiNhanh == 0) {
+            // Disable buttons if maChiNhanh is 0
+            addButton.setEnabled(false);
+            editButton.setEnabled(false);
+            deleteButton.setEnabled(false);
+            removeButton.setEnabled(false);
+        } else {
+            // Enable buttons if maChiNhanh is not 0
+            addButton.setEnabled(true);
+            editButton.setEnabled(true);
+            deleteButton.setEnabled(true);
+            removeButton.setEnabled(true);
+
+            // Add action listeners to buttons
+            addButton.addActionListener(e -> addEmployee());
+            editButton.addActionListener(e -> editEmployee());
+            deleteButton.addActionListener(e -> deleteEmployee());
+            removeButton.addActionListener(e -> removeButton());
+        }
 
         // Action listeners for buttons
-        addButton.addActionListener(e -> addEmployee());
+      /*  addButton.addActionListener(e -> addEmployee());
         editButton.addActionListener(e -> editEmployee());
         deleteButton.addActionListener(e -> deleteEmployee());
         removeButton.addActionListener(e -> removeButton());
+
+       */
 
         // Create input panel for text fields
         JPanel inputPanel = new JPanel(new GridLayout(6, 2, 6, 6));
@@ -92,13 +113,20 @@ public class EmployeeManagementView extends JPanel {
         inputPanel.add(txtphanQuyen);
         inputPanel.add(new JLabel("  Mật khẩu :"));
         inputPanel.add(txtmatKhau);
-
-        // Panel to hold the buttons
         JPanel buttonPanel = new JPanel();
+        if (maChiNhanh != 0)
+        {
+        // Panel to hold the buttons
+
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(removeButton);
+        }else
+        {
+
+        }
+
 
         // Create a panel to hold inputPanel, tablePanel, and buttonPanel
         JPanel mainPanel = new JPanel();
@@ -109,10 +137,19 @@ public class EmployeeManagementView extends JPanel {
 
         // Add the entire mainPanel to the parent panel
         add(mainPanel);
+        if (maChiNhanh == 0)
+        {
+            loadEmployeeTong();
+        }else
+        {
+            loadEmployees(); // Initial load of employees
+        }
 
-        loadEmployees(); // Initial load of employees
 
     }
+
+
+
 
 
 
@@ -120,9 +157,27 @@ public class EmployeeManagementView extends JPanel {
         clearFields();
     }
 
+  private  void loadEmployeeTong() throws SQLException {
+      List<Employee> employees = employeeDAO.getAllEmployeesTong();
+      DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+      model.setRowCount(0);  // Clear existing rows in the table
+
+      // Add rows to the table model
+      for (Employee employee : employees) {
+          model.addRow(new Object[]{
+                  employee.getMaNhanVien(),
+                  employee.getHoTen(),
+                  employee.getChucVu(),
+                  employee.getMaChiNhanh(),
+                  employee.getPhanQuyen(),
+                  employee.getMatKhau()
+          });
+      }
+  }
 
     private void loadEmployees() {
         try {
+
             // Get the list of employees for the specified branch
             List<Employee> employees = employeeDAO.getAllEmployees(maChiNhanh);
 

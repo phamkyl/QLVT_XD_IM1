@@ -17,7 +17,7 @@ public class CustomerDAO {
     // Phương thức lấy tất cả khách hàng
     public List<Customer> getAllCustomers() throws SQLException {
         List<Customer> customers = new ArrayList<>();
-        String query = "SELECT TOP (1000) [MaKhachHang], [HoTen], [DiaChi], [SoDienThoai], [Email], [rowguid] FROM [VT_XD_TOANMINH].[dbo].[KhachHang]";
+        String query = "SELECT TOP (1000) [MaKhachHang], [HoTen], [DiaChi], [SoDienThoai], [Email], [rowguid] FROM [VT_XAYDUNG].[dbo].[KhachHang]";
 
         // Sử dụng try-with-resources để tự động đóng kết nối
         try (Connection connection = dbConnection.getConnection();
@@ -44,7 +44,7 @@ public class CustomerDAO {
 
     // Phương thức thêm khách hàng
     public void addCustomer(Customer customer) throws SQLException {
-        String query = "INSERT INTO [VT_XD_TOANMINH].[dbo].[KhachHang] ([HoTen], [DiaChi], [SoDienThoai], [Email], [rowguid]) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO [VT_XAYDUNG].[dbo].[KhachHang] ([HoTen], [DiaChi], [SoDienThoai], [Email], [rowguid]) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -63,7 +63,7 @@ public class CustomerDAO {
 
     // Phương thức sửa thông tin khách hàng
     public void updateCustomer(Customer customer) throws SQLException {
-        String query = "UPDATE [VT_XD_TOANMINH].[dbo].[KhachHang] SET [HoTen] = ?, [DiaChi] = ?, [SoDienThoai] = ?, [Email] = ? WHERE [MaKhachHang] = ?";
+        String query = "UPDATE [VT_XAYDUNG].[dbo].[KhachHang] SET [HoTen] = ?, [DiaChi] = ?, [SoDienThoai] = ?, [Email] = ? WHERE [MaKhachHang] = ?";
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -82,7 +82,7 @@ public class CustomerDAO {
 
     // Phương thức xóa khách hàng
     public void deleteCustomer(int maKhachHang) throws SQLException {
-        String query = "DELETE FROM [VT_XD_TOANMINH].[dbo].[KhachHang] WHERE [MaKhachHang] = ?";
+        String query = "DELETE FROM [VT_XAYDUNG].[dbo].[KhachHang] WHERE [MaKhachHang] = ?";
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -97,7 +97,7 @@ public class CustomerDAO {
     // Phương thức tìm kiếm khách hàng theo tên
     public List<Customer> searchCustomersByName(String name) throws SQLException {
         List<Customer> customers = new ArrayList<>();
-        String query = "SELECT [MaKhachHang], [HoTen], [DiaChi], [SoDienThoai], [Email], [rowguid] FROM [VT_XD_TOANMINH].[dbo].[KhachHang] WHERE [HoTen] LIKE ?";
+        String query = "SELECT [MaKhachHang], [HoTen], [DiaChi], [SoDienThoai], [Email], [rowguid] FROM [VT_XAYDUNG].[dbo].[KhachHang] WHERE [HoTen] LIKE ?";
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {

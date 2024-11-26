@@ -12,14 +12,15 @@ import java.util.Map;
 
 public class MainView_IM extends JFrame {
     private String userRole;
-    private String userName;
+    private String userName, chucVu;
     private int maChiNhanh; // ID chi nhánh
     private JPanel panel;
 
     // Constructor để khởi tạo MainView với thông tin người dùng
-    public MainView_IM(String userRole, String userName, int maChiNhanh) {
+    public MainView_IM(String userRole, String userName, int maChiNhanh, String chucVu) {
         this.userRole = userRole;
         this.userName = userName;
+        this.chucVu = chucVu;
         this.maChiNhanh = maChiNhanh; // Gán ID chi nhánh
         initialize(); // Gọi phương thức khởi tạo giao diện
     }
@@ -27,6 +28,8 @@ public class MainView_IM extends JFrame {
     public MainView_IM() {
         initialize();
     }
+
+
 
     private void initialize() {
         setTitle("Giao Diện Chính");
@@ -132,10 +135,11 @@ public class MainView_IM extends JFrame {
     // Phương thức thêm các nút chức năng vào optionsPanel dựa trên phân quyền
     public void showOptions(JPanel optionsPanel) {
         Map<String, String[]> roleOptions = new HashMap<>();
-        roleOptions.put("admin", new String[]{"QL nhân viên", "QL chi nhánh", "QL kho", "QL vật tư",
+        roleOptions.put("Admin", new String[]{"QL nhân viên", "QL chi nhánh", "QL kho", "QL vật tư",
                 "QL nhà cung cấp", "QL khách hàng", "QL đơn hàng","QL Nhap-xuat", "QL BC_TK"});
-        roleOptions.put("manager", new String[]{"QL kho", "QL vật tư", "QL khách hàng", "QL đơn hàng"});
-        roleOptions.put("employee", new String[]{"QL nhân viên", "QL chi nhánh", "QL kho", "QL vật tư",
+        roleOptions.put("Quanly", new String[]{"QL nhân viên", "QL chi nhánh", "QL kho", "QL vật tư",
+                "QL nhà cung cấp", "QL khách hàng", "QL đơn hàng","QL Nhap-xuat", "QL BC_TK"});
+        roleOptions.put("Nhanvien", new String[]{"QL nhân viên", "QL chi nhánh", "QL kho", "QL vật tư",
                 "QL nhà cung cấp", "QL khách hàng", "QL đơn hàng","QL Nhap-xuat", "QL BC_TK"});
 
         // Map icon path với chức năng
@@ -195,11 +199,15 @@ public class MainView_IM extends JFrame {
                             openBranchManagementView(rightPanel);
                             break;
                         case "QL nhân viên":
-                            if (!userRole.equals("admin")) {
+                            if (!userRole.equals("Quanly") && !userRole.equals("Admin")) {
                                 JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
                                 return;
                             }
-                            openEmployeeManagementView(rightPanel);
+                            try {
+                                openEmployeeManagementView(rightPanel);
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
                             break;
                         case "QL vật tư" :
                             openMaterialManagementView(rightPanel);
@@ -271,7 +279,7 @@ public class MainView_IM extends JFrame {
 
   // vat tu
     private void openMaterialManagementView(JPanel rightPanel) {
-        MaterialManagementView materialManagementView = new MaterialManagementView(this);
+        MaterialManagementView materialManagementView = new MaterialManagementView(this,maChiNhanh);
         materialManagementView.setVisible(true);
         // Tạo JScrollPane để cuộn nếu nội dung quá lớn
         JScrollPane scrollPane = new JScrollPane(materialManagementView);
@@ -284,7 +292,7 @@ public class MainView_IM extends JFrame {
 // nha cung cap
     private void openSupplierManagementView(JPanel rightPanel) {
         // Tạo một SupplierManagementView mới
-        SupplierManagementView supplierManagementView = new SupplierManagementView(this);
+        SupplierManagementView supplierManagementView = new SupplierManagementView(this,maChiNhanh);
         supplierManagementView.setVisible(true);
 
 
@@ -299,7 +307,7 @@ public class MainView_IM extends JFrame {
     }
 
     // nhan vien
-    private void openEmployeeManagementView(JPanel rightPanel) {
+    private void openEmployeeManagementView(JPanel rightPanel) throws SQLException {
         EmployeeManagementView employeeManagementView = new EmployeeManagementView(this, maChiNhanh); // Pass branch ID
         employeeManagementView.setVisible(true);
         // Tạo JScrollPane chứa SupplierManagementView để cuộn khi cần thiết
@@ -316,7 +324,7 @@ public class MainView_IM extends JFrame {
     // khach hang
     private void openCustomerManagementView(JPanel rightPanel) throws SQLException {
         // Tạo giao diện quản lý khách hàng
-        CustomerManagementView customerManagementView = new CustomerManagementView(this);
+        CustomerManagementView customerManagementView = new CustomerManagementView(this,maChiNhanh);
         customerManagementView.setVisible(true);
 
         // Sử dụng JScrollPane thay vì ScrollPane
@@ -348,22 +356,22 @@ public class MainView_IM extends JFrame {
 
 
     private void openOrderManagementView(JPanel rightPanel) {
-        OrderManagementView orderManagementView = new OrderManagementView(this);
-        orderManagementView.setVisible(true);
+        OrderManagementView orderManagementView = new OrderManagementView(this, maChiNhanh);
         JScrollPane scrollPane = new JScrollPane(orderManagementView);
 
         // Đặt kích thước cho JScrollPane
-        scrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), 600)); // Kích thước tùy chỉnh
+        scrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), 600));
 
-        // Cập nhật lại rightPanel với JScrollPane chứa CustomerManagementView
+        // Cập nhật lại rightPanel với JScrollPane chứa OrderManagementView
         updateRightPanelWithView(rightPanel, scrollPane);
     }
+
 
     private void OpenImportExportView(JPanel rightPanel) {
         // Tạo ImportExportView, truyền đúng đối tượng cần thiết
         PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO();  // Khởi tạo DAO
         PhieuXuatDAO phieuXuatDAO = new PhieuXuatDAO();  // Khởi tạo DAO
-        ImportExportView importExportView = new ImportExportView(this, purchaseOrderDAO, phieuXuatDAO);
+        ImportExportView importExportView = new ImportExportView(this, purchaseOrderDAO, phieuXuatDAO,maChiNhanh);
 
         // Đặt ImportExportView vào JScrollPane
         JScrollPane scrollPane = new JScrollPane(importExportView);

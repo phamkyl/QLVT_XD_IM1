@@ -95,15 +95,36 @@ public class WarehouseManagementView extends JPanel {
         add(inputPanel);
         add(tablePanel);
         add(buttonPanel);
-
+        if (maChiNhanh == 0) {
+            // Disable buttons if maChiNhanh is 0
+            addButton.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            removeButton.setVisible(false);
+            exitButton.setVisible(false);
+        } else {
+            // Enable buttons if maChiNhanh is not 0
+            addButton.setVisible(true);
+            editButton.setVisible(true);
+            deleteButton.setVisible(true);
+            removeButton.setVisible(true);
+            exitButton.setVisible(false);
         // Button actions
         addButton.addActionListener(e -> addWarehouse());
         editButton.addActionListener(e -> editWarehouse());
         deleteButton.addActionListener(e -> deleteWarehouse());
         exitButton.addActionListener(e -> System.exit(0));
         removeButton.addActionListener(e -> clearFields());
+        }
 
-        loadWarehouses(); // Load data from the database on initialization
+
+        if (maChiNhanh==0)
+        {
+            loadWarehousesTong();
+        }else {
+            loadWarehouses(); // Load data from the database on initialization
+        }
+
     }
 
     private void clearFields() {
@@ -211,4 +232,27 @@ public class WarehouseManagementView extends JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi khi tải kho: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    private void loadWarehousesTong() {
+        try {
+            List<Warehouse> warehouses = warehouseDAO.getWarehousesByBranchTong();
+            model.setRowCount(0);  // Clear existing rows
+            if (warehouses.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy kho trong chi nhánh này", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+            for (Warehouse warehouse : warehouses) {
+                model.addRow(new Object[]{
+                        warehouse.getMaKho(),
+                        warehouse.getTenKho(),
+                        warehouse.getDiaChi(),
+                        warehouse.getMaChiNhanh()
+                });
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi tải kho: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
 }

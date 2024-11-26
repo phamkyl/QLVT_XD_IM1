@@ -17,10 +17,11 @@ public class MaterialManagementView extends JPanel {
     private MaterialDAO materialDAO;
     private JTextField txtMaVatTu, txtTenVatTu, txtMoTa, txtDonViTinh, txtGia, txtMaNhaCungCap;
     private JTable tableMaterial;
+    private int maChiNhanh;
 
-    public MaterialManagementView(MainView_IM mainViewIm) {
+    public MaterialManagementView(MainView_IM mainViewIm,int maChiNhanh) {
         materialDAO = new MaterialDAO();
-
+        this.maChiNhanh = maChiNhanh;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Title label
@@ -90,6 +91,13 @@ public class MaterialManagementView extends JPanel {
             button.setForeground(Color.WHITE);
             button.setFont(new Font("Arial", Font.BOLD, 14));
             button.setFocusPainted(false);
+        }
+        if (maChiNhanh == 0) {
+            addButton.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            removeButton.setVisible(false);
+            exitButton.setVisible(false);
         }
 
         buttonPanel.add(addButton);

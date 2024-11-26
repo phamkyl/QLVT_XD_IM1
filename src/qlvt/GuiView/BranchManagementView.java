@@ -67,28 +67,44 @@ public class BranchManagementView extends JPanel {
         buttonPanel.add(deleteButton);
         buttonPanel.add(backButton);
         add(buttonPanel, BorderLayout.SOUTH);
+        if (maChiNhanh == 0) {
+            // Disable buttons if maChiNhanh is 0
+            addButton.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            backButton.setVisible(false);
+        } else {
+            // Enable buttons if maChiNhanh is not 0
+            addButton.setVisible(true);
+            editButton.setVisible(true);
+            deleteButton.setVisible(true);
+            backButton.setVisible(true);
+            // Action for Add button
+            addButton.addActionListener(e -> {
+                addBranch();
+            });
 
-        // Action for Add button
-        addButton.addActionListener(e -> {
-            addBranch();
-        });
+            // Action for Edit button
+            editButton.addActionListener(e -> {
+                editBranch(branchTable);
+            });
 
-        // Action for Edit button
-        editButton.addActionListener(e -> {
-            editBranch(branchTable);
-        });
+            // Action for Delete button
+            deleteButton.addActionListener(e -> {
+                deleteBranch(branchTable);
+            });
 
-        // Action for Delete button
-        deleteButton.addActionListener(e -> {
-            deleteBranch(branchTable);
-        });
+        }
 
         // Action for Back button
-        backButton.addActionListener(e -> {
-            openMainView(); // Open the main view
-        });
+        if(maChiNhanh==0)
+        {
+            loadBranchesTong();
+        }else {
+            loadBranches(); // Load branches
+        }
 
-        loadBranches(); // Load branches
+
     }
 
     private void updateBranchDetails(JTable branchTable) {
@@ -158,16 +174,7 @@ public class BranchManagementView extends JPanel {
         }
     }
 
-    private void openMainView() {
-        String userRole = "Admin"; // Example user role, replace with actual
-        String userName = "User"; // Example user name, replace with actual
 
-        // You can update the main view as required.
-        MainView_IM mainViewIm = new MainView_IM(userRole, userName, maChiNhanh); // Create MainView with parameters
-        mainViewIm.setVisible(true); // Show MainView
-        mainViewIm.setSize(900, 500);
-        mainViewIm.setResizable(true);
-    }
 
     private void loadBranches() {
         try {
@@ -184,4 +191,23 @@ public class BranchManagementView extends JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
         }
     }
+
+    private void loadBranchesTong() {
+        try {
+            List<Branch> branches = branchDAO.getAllBranchesTong();
+            for (Branch branch : branches) {
+                model.addRow(new Object[]{
+                        branch.getMaChiNhanh(),
+                        branch.getTenChiNhanh(),
+                        branch.getDiaChi()
+                });
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
+        }
+    }
+
+
+
 }

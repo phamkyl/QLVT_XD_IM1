@@ -17,13 +17,15 @@ public class LoginController {
         this.loginView = view;
     }
 
-    public void login(String maNhanVien, String matKhau, String maChiNhanhStr) {
+    public void login(String maNhanVien, String matKhau, String maChiNhanhStr,String Chucvu) {
         try {
+
+
             // Convert maChiNhanhStr to Integer
             int maChiNhanh = Integer.parseInt(maChiNhanhStr);
 
             // Check login credentials
-            Employee employee = employeeDAO.getEmployeeByCredentials(maNhanVien, matKhau);
+            Employee employee = employeeDAO.getEmployeeByCredentials(maNhanVien, matKhau,Chucvu);
 
             // If login is successful
             if (employee != null && employee.getMaChiNhanh() == maChiNhanh) {
@@ -37,14 +39,14 @@ public class LoginController {
                     JPanel optionsPanel = new JPanel(); // Create a new JPanel for options
 
                     switch (phanQuyen) {
-                        case "admin": // quản lý 2 chi nhánh
-                            mainView = new MainView_IM("admin", employee.getHoTen(), maChiNhanh);
+                        case "Admin": // quản lý 2 chi nhánh
+                            mainView = new MainView_IM("Admin", employee.getHoTen(), maChiNhanh, employee.getChucVu());
                             break;
-                        case "ADMIN0": // quản lý 1 chi nhánh
-                            mainView = new MainView_IM("ADMIN0", employee.getHoTen(), maChiNhanh);
+                        case "Quanly": // quản lý 1 chi nhánh
+                            mainView = new MainView_IM("Quanly", employee.getHoTen(), maChiNhanh,employee.getChucVu());
                             break;
-                        case "employee": // nhân viên 1 chi nhánh
-                            mainView = new MainView_IM("employee", employee.getHoTen(), maChiNhanh);
+                        case "Nhanvien": // nhân viên 1 chi nhánh
+                            mainView = new MainView_IM("Nhanvien", employee.getHoTen(), maChiNhanh,employee.getChucVu());
                             break;
                         default:
                             loginView.showError("Không xác định quyền!");

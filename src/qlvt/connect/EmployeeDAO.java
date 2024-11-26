@@ -18,7 +18,7 @@ public class EmployeeDAO {
     }
 
     // Phương thức để tìm nhân viên theo mã nhân viên và mật khẩu
-    public Employee getEmployeeByCredentials(String maNhanVien, String matKhau) throws SQLException {
+    public Employee getEmployeeByCredentials(String maNhanVien, String matKhau,String Chucvu) throws SQLException {
         String query = "SELECT * FROM NhanVien WHERE MaNhanVien = ? AND MatKhau = ?";
         Employee employee = null;
 
@@ -96,6 +96,32 @@ public class EmployeeDAO {
         return employees; // Trả về danh sách nhân viên
     }
 
+    // Lấy danh sách tất cả nhân viên dựa trên mã chi nhánh
+    public List<Employee> getAllEmployeesTong() throws SQLException {
+        List<Employee> employees = new ArrayList<>();
+        String query = "SELECT * FROM NhanVien "; // Lọc theo mã chi nhánh
+        //String serverURL = getServerURLByBranch(maChiNhanh); // Lấy URL máy chủ dựa trên mã chi nhánh
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            //stmt.setInt(1, maChiNhanh); // Thiết lập mã chi nhánh trong truy vấn
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                employees.add(new Employee(
+                        rs.getInt("MaNhanVien"),
+                        rs.getString("HoTen"),
+                        rs.getString("ChucVu"),
+                        rs.getInt("MaChiNhanh"),
+                        rs.getString("PhanQuyen"),
+                        rs.getString("MatKhau")
+                ));
+            }
+        }
+        return employees; // Trả về danh sách nhân viên
+    }
+
     // Thêm một nhân viên mới
     public void addEmployee(Employee employee) throws SQLException {
         String query = "INSERT INTO NhanVien (MaNhanVien, HoTen, ChucVu, MaChiNhanh, PhanQuyen, MatKhau) VALUES (?, ?, ?, ?, ?, ?)";
@@ -149,6 +175,8 @@ public class EmployeeDAO {
     // Phương thức lấy URL máy chủ dựa trên mã chi nhánh
     private String getServerURLByBranch(int maChiNhanh) {
         switch (maChiNhanh) {
+            case 0:
+                return DistributedDatabaseConnection.SERVER1_URL;
             case 1:
                 return DistributedDatabaseConnection.SERVER2_URL; // Kết nối đến SERVER1_URL cho chi nhánh 1
             case 2:
