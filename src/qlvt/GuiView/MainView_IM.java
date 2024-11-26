@@ -12,14 +12,15 @@ import java.util.Map;
 
 public class MainView_IM extends JFrame {
     private String userRole;
-    private String userName;
+    private String userName, chucVu;
     private int maChiNhanh; // ID chi nhánh
     private JPanel panel;
 
     // Constructor để khởi tạo MainView với thông tin người dùng
-    public MainView_IM(String userRole, String userName, int maChiNhanh) {
+    public MainView_IM(String userRole, String userName, int maChiNhanh, String chucVu) {
         this.userRole = userRole;
         this.userName = userName;
+        this.chucVu = chucVu;
         this.maChiNhanh = maChiNhanh; // Gán ID chi nhánh
         initialize(); // Gọi phương thức khởi tạo giao diện
     }
@@ -27,6 +28,8 @@ public class MainView_IM extends JFrame {
     public MainView_IM() {
         initialize();
     }
+
+
 
     private void initialize() {
         setTitle("Giao Diện Chính");

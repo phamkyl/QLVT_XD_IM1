@@ -84,9 +84,7 @@ public class BranchManagementView extends JPanel {
         });
 
         // Action for Back button
-        backButton.addActionListener(e -> {
-            openMainView(); // Open the main view
-        });
+
 
         loadBranches(); // Load branches
     }
@@ -158,16 +156,7 @@ public class BranchManagementView extends JPanel {
         }
     }
 
-    private void openMainView() {
-        String userRole = "Admin"; // Example user role, replace with actual
-        String userName = "User"; // Example user name, replace with actual
 
-        // You can update the main view as required.
-        MainView_IM mainViewIm = new MainView_IM(userRole, userName, maChiNhanh); // Create MainView with parameters
-        mainViewIm.setVisible(true); // Show MainView
-        mainViewIm.setSize(900, 500);
-        mainViewIm.setResizable(true);
-    }
 
     private void loadBranches() {
         try {

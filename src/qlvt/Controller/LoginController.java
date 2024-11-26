@@ -17,13 +17,13 @@ public class LoginController {
         this.loginView = view;
     }
 
-    public void login(String maNhanVien, String matKhau, String maChiNhanhStr) {
+    public void login(String maNhanVien, String matKhau, String maChiNhanhStr,String Chucvu) {
         try {
             // Convert maChiNhanhStr to Integer
             int maChiNhanh = Integer.parseInt(maChiNhanhStr);
 
             // Check login credentials
-            Employee employee = employeeDAO.getEmployeeByCredentials(maNhanVien, matKhau);
+            Employee employee = employeeDAO.getEmployeeByCredentials(maNhanVien, matKhau,Chucvu);
 
             // If login is successful
             if (employee != null && employee.getMaChiNhanh() == maChiNhanh) {
@@ -38,13 +38,13 @@ public class LoginController {
 
                     switch (phanQuyen) {
                         case "admin": // quản lý 2 chi nhánh
-                            mainView = new MainView_IM("admin", employee.getHoTen(), maChiNhanh);
+                            mainView = new MainView_IM("admin", employee.getHoTen(), maChiNhanh, employee.getChucVu());
                             break;
                         case "ADMIN0": // quản lý 1 chi nhánh
-                            mainView = new MainView_IM("ADMIN0", employee.getHoTen(), maChiNhanh);
+                            mainView = new MainView_IM("ADMIN0", employee.getHoTen(), maChiNhanh,employee.getChucVu());
                             break;
                         case "employee": // nhân viên 1 chi nhánh
-                            mainView = new MainView_IM("employee", employee.getHoTen(), maChiNhanh);
+                            mainView = new MainView_IM("employee", employee.getHoTen(), maChiNhanh,employee.getChucVu());
                             break;
                         default:
                             loginView.showError("Không xác định quyền!");

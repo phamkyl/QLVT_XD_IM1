@@ -18,7 +18,7 @@ public class EmployeeDAO {
     }
 
     // Phương thức để tìm nhân viên theo mã nhân viên và mật khẩu
-    public Employee getEmployeeByCredentials(String maNhanVien, String matKhau) throws SQLException {
+    public Employee getEmployeeByCredentials(String maNhanVien, String matKhau,String Chucvu) throws SQLException {
         String query = "SELECT * FROM NhanVien WHERE MaNhanVien = ? AND MatKhau = ?";
         Employee employee = null;
 
