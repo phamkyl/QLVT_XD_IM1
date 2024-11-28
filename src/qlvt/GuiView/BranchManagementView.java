@@ -67,44 +67,28 @@ public class BranchManagementView extends JPanel {
         buttonPanel.add(deleteButton);
         buttonPanel.add(backButton);
         add(buttonPanel, BorderLayout.SOUTH);
-        if (maChiNhanh == 0) {
-            // Disable buttons if maChiNhanh is 0
-            addButton.setVisible(false);
-            editButton.setVisible(false);
-            deleteButton.setVisible(false);
-            backButton.setVisible(false);
-        } else {
-            // Enable buttons if maChiNhanh is not 0
-            addButton.setVisible(true);
-            editButton.setVisible(true);
-            deleteButton.setVisible(true);
-            backButton.setVisible(true);
-            // Action for Add button
-            addButton.addActionListener(e -> {
-                addBranch();
-            });
 
-            // Action for Edit button
-            editButton.addActionListener(e -> {
-                editBranch(branchTable);
-            });
+        // Action for Add button
+        addButton.addActionListener(e -> {
+            addBranch();
+        });
 
-            // Action for Delete button
-            deleteButton.addActionListener(e -> {
-                deleteBranch(branchTable);
-            });
+        // Action for Edit button
+        editButton.addActionListener(e -> {
+            editBranch(branchTable);
+        });
 
-        }
+        // Action for Delete button
+        deleteButton.addActionListener(e -> {
+            deleteBranch(branchTable);
+        });
 
         // Action for Back button
-        if(maChiNhanh==0)
-        {
-            loadBranchesTong();
-        }else {
-            loadBranches(); // Load branches
-        }
+        backButton.addActionListener(e -> {
+            //openMainView(); // Open the main view
+        });
 
-
+        loadBranches(); // Load branches
     }
 
     private void updateBranchDetails(JTable branchTable) {
@@ -191,23 +175,4 @@ public class BranchManagementView extends JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
         }
     }
-
-    private void loadBranchesTong() {
-        try {
-            List<Branch> branches = branchDAO.getAllBranchesTong();
-            for (Branch branch : branches) {
-                model.addRow(new Object[]{
-                        branch.getMaChiNhanh(),
-                        branch.getTenChiNhanh(),
-                        branch.getDiaChi()
-                });
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
-        }
-    }
-
-
-
 }
