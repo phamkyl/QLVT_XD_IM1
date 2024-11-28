@@ -61,6 +61,13 @@ public class BranchManagementView extends JPanel {
             button.setFont(new Font("Arial", Font.BOLD, 14));
             button.setFocusPainted(false);
         }
+        if (maChiNhanh == 0) {
+            addButton.setVisible(false);
+            editButton.setVisible(false);
+            deleteButton.setVisible(false);
+            //refreshButton.setVisible(false);
+            backButton.setVisible(false);
+        }
 
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
@@ -88,7 +95,12 @@ public class BranchManagementView extends JPanel {
             //openMainView(); // Open the main view
         });
 
-        loadBranches(); // Load branches
+        if(maChiNhanh == 0)
+        {
+            loadBranchesTong();
+        } else {
+            loadBranches(); // Load branches
+        }
     }
 
     private void updateBranchDetails(JTable branchTable) {
@@ -175,4 +187,23 @@ public class BranchManagementView extends JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
         }
     }
+
+    private void loadBranchesTong() {
+        try {
+            List<Branch> branches = branchDAO.getAllBranchesTong();
+            for (Branch branch : branches) {
+                model.addRow(new Object[]{
+                        branch.getMaChiNhanh(),
+                        branch.getTenChiNhanh(),
+                        branch.getDiaChi()
+                });
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
+        }
+    }
+
+
+
 }
